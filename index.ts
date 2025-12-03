@@ -22,7 +22,7 @@ const startServer = async (): Promise<void> => {
     process.exit(1);
   }
 };
-
 startServer();
 
-export default server;
+// This is what Vercel will use - export the Express app directly
+module.exports = server;
