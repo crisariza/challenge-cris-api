@@ -5,13 +5,18 @@ import pg from "pg";
 dotenv.config();
 
 //? SQL Connection
-const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DATABASE } =
+const { POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST } =
   process.env;
 
 // Validate required environment variables
-if (!POSTGRES_DATABASE || !POSTGRES_USER || !POSTGRES_PASSWORD) {
+if (
+  !POSTGRES_DATABASE ||
+  !POSTGRES_USER ||
+  !POSTGRES_PASSWORD ||
+  !POSTGRES_HOST
+) {
   throw new Error(
-    "Missing required database environment variables: POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD"
+    "Missing required database environment variables: POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST"
   );
 }
 

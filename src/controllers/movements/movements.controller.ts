@@ -19,14 +19,13 @@ export const getLastMovements = async (req: Request, res: Response) => {
       data: transactions,
     };
 
-    res.json(movementsResponse);
+    res.status(200).json(movementsResponse);
   } catch (error) {
     console.error("Error processing get last movements request:", error);
 
     const errorResponse: ErrorResponse = {
       error: "Internal server error",
       message: "Failed to process get last movements request",
-      details: error instanceof Error ? error.message : "Unknown error",
     };
     res.status(500).json(errorResponse);
   }
@@ -56,14 +55,13 @@ export const getAllMovements = async (req: Request, res: Response) => {
       data: transactions,
     };
 
-    res.json(movementsResponse);
+    res.status(200).json(movementsResponse);
   } catch (error) {
     console.error("Error processing get all movements request:", error);
 
     const errorResponse: ErrorResponse = {
       error: "Internal server error",
       message: "Failed to process get all movements request",
-      details: error instanceof Error ? error.message : "Unknown error",
     };
     res.status(500).json(errorResponse);
   }

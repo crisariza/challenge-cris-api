@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
       data: result,
     };
 
-    res.json(loginResponse);
+    res.status(200).json(loginResponse);
   } catch (error) {
     console.error("Error processing login request:", error);
 
@@ -51,7 +51,6 @@ export const login = async (req: Request, res: Response) => {
     const errorResponse: ErrorResponse = {
       error: "Internal server error",
       message: "Failed to process login request",
-      details: error instanceof Error ? error.message : "Unknown error",
     };
     res.status(500).json(errorResponse);
   }
