@@ -4,7 +4,7 @@ API REST desarrollada con Node.js, Express, TypeScript y PostgreSQL para el chal
 
 ## Requisitos Previos
 
-- **Node.js**: Versión 22.x
+- **Node.js**: Versión 24.x
 - **npm**: Versión 11.x
 - **PostgreSQL**: Instalada, recomendado PgAdmin para corroborar los datos de seed facilmente
 
