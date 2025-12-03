@@ -4,25 +4,43 @@ import pg from "pg";
 
 dotenv.config();
 
-const DB_NAME = process.env.POSTGRES_DATABASE || "paisabank";
-const DB_USER = process.env.POSTGRES_USER || "postgres";
-const DB_PASSWORD = process.env.POSTGRES_PASSWORD || "";
-const DB_HOST = process.env.POSTGRES_HOST || "localhost";
-const DB_PORT = parseInt(process.env.POSTGRES_PORT || "5432", 10);
+//? SQL Connection
+const { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST, POSTGRES_DATABASE } =
+  process.env;
 
-export const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-  host: DB_HOST,
-  port: DB_PORT,
-  dialect: "postgres",
-  dialectModule: pg,
-  logging: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-});
+// Validate required environment variables
+if (!POSTGRES_DATABASE || !POSTGRES_USER || !POSTGRES_PASSWORD) {
+  throw new Error(
+    "Missing required database environment variables: POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD"
+  );
+}
+
+export const sequelize = new Sequelize(
+  POSTGRES_DATABASE,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  {
+    host: POSTGRES_HOST,
+    dialect: "postgres",
+    dialectModule: pg,
+    dialectOptions: {
+      ssl:
+        process.env.ENVIRONMENT === "prod"
+          ? {
+              require: true,
+              rejectUnauthorized: false,
+            }
+          : false,
+    },
+    logging: false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  }
+);
 
 export const connectDatabase = async (): Promise<void> => {
   try {
