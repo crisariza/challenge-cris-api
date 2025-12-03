@@ -20,6 +20,7 @@ npm install
 
 ```env
 PORT=3000 (por defecto 3000)
+ENVIRONMENT=prod o dev
 
 # Configuración de PostgreSQL
 POSTGRES_DATABASE=paisabank
