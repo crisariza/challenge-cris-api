@@ -37,7 +37,7 @@ POSTGRES_PORT=5432
 CREATE DATABASE paisabank;
 ```
 
-## 🏃 Ejecutar la API
+## Ejecutar la API
 
 ### Dev
 
