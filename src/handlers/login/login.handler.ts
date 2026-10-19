@@ -1,4 +1,7 @@
+import bcrypt from "bcryptjs";
+import { randomUUID } from "crypto";
 import User from "../../models/user";
+import { signToken } from "../../config/auth";
 
 interface LoginCredentials {
   email: string;
@@ -10,10 +13,9 @@ interface LoginResult {
   token: string;
 }
 
-export const generateToken = (email: string): string => {
-  // Dummy token
-  return Buffer.from(`${email}:${Date.now()}`).toString("base64");
-};
+// Compared against when the email does not exist, so a missing user takes
+// as long as a wrong password and the response time doesn't reveal emails
+const dummyHash = bcrypt.hash(randomUUID(), 10);
 
 export const loginHandler = async (
   credentials: LoginCredentials
@@ -23,6 +25,7 @@ export const loginHandler = async (
   const user = await User.findOne({ where: { email } });
 
   if (!user) {
+    await bcrypt.compare(password, await dummyHash);
     throw new Error("Invalid credentials");
   }
 
@@ -32,7 +35,7 @@ export const loginHandler = async (
     throw new Error("Invalid credentials");
   }
 
-  const token = generateToken(email);
+  const token = signToken({ id: user.id, email: user.email });
 
   return {
     name: user.username,

@@ -1,18 +1,22 @@
 import { Request, Response } from "express";
+import { z } from "zod";
 import { ErrorResponse, Transaction } from "../../types";
 import {
   getLastMovementsHandler,
   getAllMovementsHandler,
 } from "../../handlers/movements/movements.handler";
+import { getAuthUser } from "../../middleware/auth";
+
+const filterSchema = z.enum(["SUS", "CASH_IN", "CASH_OUT"]).optional();
 
 interface MovementsResponse {
   success: boolean;
   data: Transaction[];
 }
 
-export const getLastMovements = async (req: Request, res: Response) => {
+export const getLastMovements = async (_req: Request, res: Response) => {
   try {
-    const transactions = await getLastMovementsHandler();
+    const transactions = await getLastMovementsHandler(getAuthUser(res).id);
 
     const movementsResponse: MovementsResponse = {
       success: true,
@@ -33,13 +37,9 @@ export const getLastMovements = async (req: Request, res: Response) => {
 
 export const getAllMovements = async (req: Request, res: Response) => {
   try {
-    const filter = req.query.filter as
-      | "SUS"
-      | "CASH_IN"
-      | "CASH_OUT"
-      | undefined;
+    const filter = filterSchema.safeParse(req.query.filter);
 
-    if (filter && !["SUS", "CASH_IN", "CASH_OUT"].includes(filter)) {
+    if (!filter.success) {
       const errorResponse: ErrorResponse = {
         error: "Invalid filter",
         message: "Filter must be one of: SUS, CASH_IN, CASH_OUT",
@@ -48,7 +48,10 @@ export const getAllMovements = async (req: Request, res: Response) => {
       return;
     }
 
-    const transactions = await getAllMovementsHandler(filter);
+    const transactions = await getAllMovementsHandler(
+      getAuthUser(res).id,
+      filter.data
+    );
 
     const movementsResponse: MovementsResponse = {
       success: true,

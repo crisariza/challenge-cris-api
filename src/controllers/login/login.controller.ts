@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
+import { z } from "zod";
 import { ErrorResponse } from "../../types";
 import { loginHandler } from "../../handlers/login/login.handler";
 
-interface LoginRequest {
-  email: string;
-  password: string;
-}
+const loginSchema = z.object({
+  email: z.email().max(254),
+  password: z.string().min(1).max(128),
+});
 
 interface LoginResponse {
   success: boolean;
@@ -17,18 +18,18 @@ interface LoginResponse {
 
 export const login = async (req: Request, res: Response) => {
   try {
-    const { email, password }: LoginRequest = req.body;
+    const parsed = loginSchema.safeParse(req.body);
 
-    if (!email || !password) {
+    if (!parsed.success) {
       const errorResponse: ErrorResponse = {
         error: "Missing required fields",
-        message: "Email and password are required",
+        message: "A valid email and a password are required",
       };
       res.status(400).json(errorResponse);
       return;
     }
 
-    const result = await loginHandler({ email, password });
+    const result = await loginHandler(parsed.data);
 
     const loginResponse: LoginResponse = {
       success: true,
