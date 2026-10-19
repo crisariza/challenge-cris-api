@@ -1,15 +1,16 @@
 import { Request, Response } from "express";
 import { ErrorResponse, Card } from "../../types";
 import { getCardsHandler } from "../../handlers/cards/cards.handler";
+import { getAuthUser } from "../../middleware/auth";
 
 interface CardsResponse {
   success: boolean;
   data: Card[];
 }
 
-export const getCards = async (req: Request, res: Response) => {
+export const getCards = async (_req: Request, res: Response) => {
   try {
-    const cards = await getCardsHandler();
+    const cards = await getCardsHandler(getAuthUser(res).id);
 
     const cardsResponse: CardsResponse = {
       success: true,

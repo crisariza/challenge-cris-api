@@ -1,12 +1,9 @@
 import { Card } from "../../types";
 import CardModel from "../../models/card";
 
-export const getCardsHandler = async (userId?: number): Promise<Card[]> => {
-  // Como en el login no da info el token, no se traen en base a un UserId, por lo tanto se trae todos los cards
-  const whereClause = userId ? { userId } : {}; // Si hubiera userId, seria a base de ese userId
-
+export const getCardsHandler = async (userId: number): Promise<Card[]> => {
   const cards = await CardModel.findAll({
-    where: whereClause,
+    where: { userId },
     order: [["id", "ASC"]],
   });
 

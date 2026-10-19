@@ -5,8 +5,13 @@ import pg from "pg";
 dotenv.config();
 
 //? SQL Connection
-const { POSTGRES_DATABASE, POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST } =
-  process.env;
+const {
+  POSTGRES_DATABASE,
+  POSTGRES_USER,
+  POSTGRES_PASSWORD,
+  POSTGRES_HOST,
+  POSTGRES_PORT,
+} = process.env;
 
 // Validate required environment variables
 if (
@@ -26,6 +31,7 @@ export const sequelize = new Sequelize(
   POSTGRES_PASSWORD,
   {
     host: POSTGRES_HOST,
+    port: POSTGRES_PORT ? parseInt(POSTGRES_PORT, 10) : 5432,
     dialect: "postgres",
     dialectModule: pg,
     dialectOptions: {

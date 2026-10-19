@@ -1,12 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import { ErrorResponse } from "../types";
+import { AuthUser, verifyToken } from "../config/auth";
 
 export const validateToken = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  const authHeader = req.headers["authorization"] as string;
+  const authHeader = req.headers["authorization"];
 
   if (!authHeader) {
     const errorResponse: ErrorResponse = {
@@ -18,18 +19,22 @@ export const validateToken = (
   }
 
   const token = authHeader.startsWith("Bearer ")
-    ? authHeader.substring(7)
-    : authHeader;
+    ? authHeader.substring(7).trim()
+    : authHeader.trim();
 
-  if (!token || token.trim() === "") {
+  try {
+    res.locals.user = verifyToken(token);
+    next();
+  } catch {
     const errorResponse: ErrorResponse = {
       error: "Invalid token",
-      message: "The provided token is not valid",
+      message: "The provided token is not valid or has expired",
     };
     res.status(401).json(errorResponse);
-    return;
   }
+};
 
-  (req as any).token = token;
-  next();
+// Only valid in routes behind validateToken
+export const getAuthUser = (res: Response): AuthUser => {
+  return res.locals.user as AuthUser;
 };

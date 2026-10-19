@@ -6,10 +6,11 @@ import {
   getAllMovements,
 } from "../controllers/movements/movements.controller";
 import { validateToken } from "../middleware/auth";
+import { loginRateLimit } from "../middleware/rate-limit";
 
 const router = Router();
 
-router.post("/login", login);
+router.post("/login", loginRateLimit, login);
 router.get("/cards", validateToken, getCards);
 router.get("/movements/last", validateToken, getLastMovements);
 router.get("/movements/all", validateToken, getAllMovements);
