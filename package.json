@@ -5,7 +5,7 @@
   "main": "index.ts",
   "scripts": {
     "server": "nodemon index.ts",
-    "start": "npm run server",
+    "start": "pnpm run server",
     "build": "tsc",
     "dev": "nodemon --exec ts-node index.ts",
     "seed": "ts-node src/scripts/seed.ts"
@@ -38,6 +38,7 @@
   },
   "engines": {
     "node": "24.x",
-    "npm": "11.x"
-  }
+    "pnpm": ">=12"
+  },
+  "packageManager": "pnpm@12.16.1"
 }
