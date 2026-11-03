@@ -5,14 +5,16 @@ API REST desarrollada con Node.js, Express, TypeScript y PostgreSQL para el chal
 ## Requisitos Previos
 
 - **Node.js**: Versión 24.x
-- **npm**: Versión 11.x
+- **pnpm**: Versión 12.x (fijada en `packageManager`)
 - **PostgreSQL**: Instalada, recomendado PgAdmin para corroborar los datos de seed facilmente
 
 1. Instalar las dependencias:
 
 ```bash
-npm install
+pnpm install
 ```
+
+Este repo usa **pnpm** (versión fijada en `packageManager`); `npm install` está bloqueado por el `preinstall`.
 
 ## Configuración
 
@@ -52,13 +54,13 @@ CREATE DATABASE paisabank;
 Al correr el server, se cargan las tablas al iniciar y los datos seed
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 o
 
 ```bash
-npm start
+pnpm start
 ```
 
 ### Prod
@@ -66,7 +68,7 @@ npm start
 1. Compilar
 
 ```bash
-npm run build
+pnpm build
 ```
 
 2. Correr el server
